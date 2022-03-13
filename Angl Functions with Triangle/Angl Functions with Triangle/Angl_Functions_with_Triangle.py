@@ -3,6 +3,7 @@
 import turtle as t
 import numpy as np
 import sys
+import math
 
 Angle = 1/7
 c = 500
@@ -10,28 +11,6 @@ c_move = 50
 b_move = 50
 a_move = 50
 num_size = 30
-
-def gcd(a, b):
-  while (b != 0):
-    temp = a % b
-    a = b
-    b = temp
-  return abs(a)
-
-def reduceFraction(bunja, bunmo):
-  frac = [ bunja, bunmo ]
-
-  if (frac[1] == 0):
-    frac[0] = 0
-    frac[1] = 0
-    return frac
-
-  gcd_result = gcd(frac[0], frac[1])
-
-  frac[0] = frac[0] / gcd_result
-  frac[1] = frac[1] / gcd_result
-
-  return frac
 
 def draw_x(z, x_len):
     x = t.xcor()-(z*Angle)
@@ -65,7 +44,7 @@ def draw_arc(x, i):
     t.circle(x*Angle, 90-i)
     t.up()
     t.goto(t.xcor()-((x*Angle)+20), 0)
-    t.write("%d'"%(90-i), False, "center", ("",25))
+    t.write("%g'"%(90-i), False, "center", ("",25))
     t.color("black")
 
 t.ht()
@@ -91,34 +70,34 @@ def Loop(i):
     t.fd(c/2)
 
     t.setheading(270)
-    b = int(np.round(t.ycor()))
-    a = int(np.round(t.xcor()))
-    t.goto(t.xcor(), b*2/5)
+    b = t.ycor()
+    a = t.xcor()
+    t.goto(t.xcor(), int(np.round(b))*2/5)
     t.up()
     t.goto(t.xcor()+b_move, t.ycor())
-    t.write("%d"%b, False, "center", ("",num_size))
+    t.write("%d"%int(np.round(b)), False, "center", ("",num_size))
     t.goto(t.xcor()-b_move, t.ycor())
     t.down()
     t.goto(t.xcor(), 0)
 
-    if a >= b:  
-        draw_x(b, a)
-        draw_arc(b, i)
+    if int(np.round(a)) >= int(np.round(b)):  
+        draw_x(int(np.round(b)), int(np.round(a)))
+        draw_arc(int(np.round(b)), i)
     else:
-        draw_x(a, a)
-        draw_arc(a, i)
+        draw_x(int(np.round(a)), int(np.round(a)))
+        draw_arc(int(np.round(a)), i)
 
     t.up()
     t.goto(-750, 250)
-    t.write("sin(x)\t %d\n----  =  ----  =  %g\n   x\t %d"%(reduceFraction(b, c)[0], reduceFraction(b, c)[0]/reduceFraction(b, c)[1], reduceFraction(b, c)[1]), False, "left", ("",25))
+    t.write("sin(x)\n----  =  %g\n   x"%(math.sin(math.radians(90-i))/math.radians(90-i)), False, "left", ("",25))
     t.goto(-750, 50)
-    t.write("tan(x)\t %d\n----  =  ----  =  %g\n   x\t %d"%(reduceFraction(b, a)[0], reduceFraction(b, a)[0]/reduceFraction(b, a)[1], reduceFraction(b, a)[1]), False, "left", ("",25))
+    t.write("tan(x)\n----  =  %g\n   x"%(math.tan(math.radians(90-i))/math.radians(90-i)), False, "left", ("",25))
     t.goto(-750, -150)
-    t.write("cos(x)\t %d\n----  =  ----  =  %g\n   x\t %d"%(reduceFraction(a, c)[0], reduceFraction(a, c)[0]/reduceFraction(a, c)[1], reduceFraction(a, c)[1]), False, "left", ("",25))
+    t.write("cos(x)\n----  =  %g\n   x"%(math.cos(math.radians(90-i))/math.radians(90-i)), False, "left", ("",25))
     t.home()
 
 while 1:
-    n = t.numinput("Degree", "Enter Degree (0 ~ 89)", minval=0, maxval=89)
+    n = t.numinput("Degree", "Enter Degree (0 ~ 89)", minval=0.000000000001, maxval=89)
 
     if n != None:
         Loop(90 - n)
